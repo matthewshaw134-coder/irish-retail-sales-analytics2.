@@ -1,0 +1,14 @@
+rank_2025,store_id,store,region,sales_2024,sales_2025,yoy_pct,share_of_sales_pct,gross_margin_pct,avg_order_value
+1,WEB,Online Store,Online,528705.41,606764.22,14.8,12.6,54.3,85.8
+2,S01,Dublin – Grafton Street,Dublin,561879.9,603164.85,7.3,12.5,54.3,81.54
+3,S02,Dublin – Dundrum,Dublin,472657.97,501343.58,6.1,10.4,54.1,80.38
+4,S03,Dublin – Blanchardstown,Dublin,439582.05,469399.96,6.8,9.8,54.1,80.96
+5,S05,Cork – Patrick Street,Munster,417984.9,450881.22,7.9,9.4,54.2,81.09
+6,S04,Dublin – Liffey Valley,Dublin,421284.59,379345.48,-10.0,7.9,54.1,80.63
+7,S06,Galway – Shop Street,Connacht,333856.95,352164.06,5.5,7.3,54.1,80.72
+8,S07,Limerick – O'Connell Street,Munster,286509.87,317604.35,10.9,6.6,54.1,79.86
+9,S08,Waterford – John Roberts Square,Munster,236978.72,257539.03,8.7,5.4,54.3,81.24
+10,S12,Dundalk – Marshes,Leinster,221645.3,241249.14,8.8,5.0,54.0,81.81
+11,S09,Kilkenny – High Street,Leinster,205701.11,224357.1,9.1,4.7,54.3,79.9
+12,S10,Athlone – Golden Island,Leinster,211184.36,222802.75,5.5,4.6,54.3,79.97
+13,S11,Sligo – O'Connell Street,Connacht,174159.83,184756.5,6.1,3.8,54.3,80.15

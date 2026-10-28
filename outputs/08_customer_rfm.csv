@@ -1,0 +1,7 @@
+segment,customers,pct_customers,total_sales,pct_sales,avg_orders,avg_spend,avg_days_since_last_order
+Champions,3501,20.5,2147388.74,38.6,7.0,613.36,23.0
+Loyal,4119,24.1,1509232.53,27.1,4.7,366.41,67.0
+At Risk,2647,15.5,1006652.39,18.1,4.4,380.3,261.0
+Lapsed,4199,24.5,530502.8,9.5,1.7,126.34,369.0
+New / Promising,1526,8.9,209034.26,3.8,2.1,136.98,26.0
+Needs Attention,1121,6.6,158748.95,2.9,2.0,141.61,102.0

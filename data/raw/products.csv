@@ -1,0 +1,36 @@
+product_id,product_name,category,unit_price,unit_cost
+P001,Wool Blend Coat,Womenswear,129.0,44.05
+P002,Knit Jumper,Womenswear,49.0,15.14
+P003,Midi Dress,Womenswear,59.0,19.19
+P004,Slim Jeans,Womenswear,45.0,16.46
+P005,Linen Shirt,Womenswear,35.0,11.38
+P006,Puffer Jacket,Womenswear,89.0,32.56
+P007,Waxed Jacket,Menswear,139.0,50.85
+P008,Aran Jumper,Menswear,69.0,22.44
+P009,Oxford Shirt,Menswear,39.0,12.68
+P010,Chinos,Menswear,45.0,16.46
+P011,Rain Jacket,Menswear,79.0,30.83
+P012,Crew Neck T-Shirt,Menswear,15.0,4.27
+P013,School Uniform Set,Kidswear,30.0,14.63
+P014,Kids Raincoat,Kidswear,32.0,13.01
+P015,Kids Hoodie,Kidswear,22.0,8.05
+P016,Pyjama Set,Kidswear,18.0,6.15
+P017,Leather Boots,Footwear,110.0,44.72
+P018,Running Trainers,Footwear,85.0,38.01
+P019,Wellington Boots,Footwear,35.0,14.23
+P020,School Shoes,Footwear,45.0,21.22
+P021,Slippers,Footwear,20.0,6.5
+P022,Merino Throw,Homeware,75.0,23.17
+P023,Scented Candle,Homeware,18.0,4.39
+P024,Cotton Bed Set,Homeware,65.0,22.2
+P025,Ceramic Mug Set,Homeware,24.0,6.83
+P026,Christmas Decoration Set,Homeware,28.0,7.28
+P027,Hand Cream Gift Set,Beauty,25.0,7.72
+P028,Perfume 50ml,Beauty,65.0,29.07
+P029,Skincare Starter Kit,Beauty,39.0,14.27
+P030,Lip Balm Trio,Beauty,12.0,3.12
+P031,Tweed Cap,Accessories,35.0,10.81
+P032,Wool Scarf,Accessories,29.0,8.02
+P033,Leather Wallet,Accessories,45.0,14.63
+P034,Umbrella,Accessories,19.0,5.87
+P035,Gloves,Accessories,22.0,6.44

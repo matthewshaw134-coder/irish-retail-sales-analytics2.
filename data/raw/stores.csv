@@ -1,0 +1,14 @@
+store_id,store_name,town,county,region,size_factor,opened_date
+S01,Grafton Street,Dublin,Dublin,Dublin,1.6,2015-03-01
+S02,Dundrum,Dublin,Dublin,Dublin,1.35,2016-09-01
+S03,Blanchardstown,Dublin,Dublin,Dublin,1.25,2017-04-01
+S04,Liffey Valley,Dublin,Dublin,Dublin,1.15,2018-06-01
+S05,Patrick Street,Cork,Cork,Munster,1.2,2016-02-01
+S06,Shop Street,Galway,Galway,Connacht,0.95,2017-11-01
+S07,O'Connell Street,Limerick,Limerick,Munster,0.85,2018-03-01
+S08,John Roberts Square,Waterford,Waterford,Munster,0.7,2019-05-01
+S09,High Street,Kilkenny,Kilkenny,Leinster,0.6,2019-08-01
+S10,Golden Island,Athlone,Westmeath,Leinster,0.62,2020-10-01
+S11,O'Connell Street,Sligo,Sligo,Connacht,0.5,2021-04-01
+S12,Marshes,Dundalk,Louth,Leinster,0.65,2021-09-01
+WEB,Online Store,Online,N/A,Online,1.4,2015-03-01

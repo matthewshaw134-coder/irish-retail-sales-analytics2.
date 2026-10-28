@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en-IE">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Clover &amp; Co. — Irish Retail Sales Dashboard 2024–2025</title>
+<style>
+.viz-root {
+  color-scheme: light;
+  --surface-0: #f4f3ef; --surface-1: #fcfcfb; --border: #e3e1da;
+  --text-primary: #0b0b0b; --text-secondary: #52514e; --text-muted: #7b7a75;
+  --grid: #ebe9e3; --series-1: #2a78d6; --series-prev: #a9a79f;
+  --good: #1a7f37; --bad: #c9302c;
+  --seq-0: #e8f1fb; --seq-1: #b9d4f3; --seq-2: #7fb0e8; --seq-3: #3f86d9; --seq-4: #1d5aa6;
+}
+@media (prefers-color-scheme: dark) {
+  .viz-root {
+    color-scheme: dark;
+    --surface-0: #121211; --surface-1: #1a1a19; --border: #2e2d2a;
+    --text-primary: #f0efec; --text-secondary: #c3c2b7; --text-muted: #8f8e86;
+    --grid: #2a2927; --series-1: #3987e5; --series-prev: #6d6c66;
+    --good: #4cc26b; --bad: #ef6b67;
+    --seq-0: #1d2633; --seq-1: #1f3c63; --seq-2: #24599a; --seq-3: #3a7fd0; --seq-4: #7fb4f0;
+  }
+}
+* { box-sizing: border-box; }
+body { margin: 0; }
+.viz-root { background: var(--surface-0); color: var(--text-primary); min-height: 100vh;
+  font: 14px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; padding: 24px; }
+.wrap { max-width: 1240px; margin: 0 auto; }
+header h1 { font-size: 24px; margin: 0 0 4px; }
+header p { margin: 0; color: var(--text-secondary); }
+.note { font-size: 12px; color: var(--text-muted); margin-top: 6px; }
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; margin: 20px 0; }
+.kpi { background: var(--surface-1); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+.kpi .label { font-size: 12px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: .04em; }
+.kpi .value { font-size: 28px; font-weight: 650; margin: 4px 0 2px; font-variant-numeric: tabular-nums; }
+.kpi .delta { font-size: 13px; color: var(--text-secondary); }
+.up, .kpi .delta.up { color: var(--good); } .down, .kpi .delta.down { color: var(--bad); }
+.grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 12px; }
+.card { background: var(--surface-1); border: 1px solid var(--border); border-radius: 10px; padding: 16px; position: relative; min-width: 0; }
+.card h2 { font-size: 15px; margin: 0 0 2px; }
+.card .sub { font-size: 12px; color: var(--text-muted); margin: 0 0 10px; }
+.span-12 { grid-column: span 12; } .span-7 { grid-column: span 7; } .span-5 { grid-column: span 5; }
+.span-6 { grid-column: span 6; }
+@media (max-width: 900px) { .span-7, .span-5, .span-6 { grid-column: span 12; } .viz-root { padding: 12px; } }
+.controls { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 8px; }
+.controls label { font-size: 12px; color: var(--text-secondary); }
+select { font: inherit; padding: 4px 8px; border-radius: 6px; border: 1px solid var(--border);
+  background: var(--surface-1); color: var(--text-primary); }
+.legend { display: flex; gap: 14px; font-size: 12px; color: var(--text-secondary); margin-bottom: 4px; flex-wrap: wrap; }
+.legend span::before { content: ""; display: inline-block; width: 14px; height: 3px; border-radius: 2px;
+  background: var(--c); vertical-align: middle; margin-right: 6px; }
+svg { display: block; width: 100%; height: auto; overflow: visible; }
+svg text { fill: var(--text-secondary); font-size: 11px; }
+.tip { position: absolute; pointer-events: none; background: var(--surface-1); border: 1px solid var(--border);
+  border-radius: 8px; padding: 8px 10px; font-size: 12px; box-shadow: 0 4px 14px rgba(0,0,0,.12);
+  opacity: 0; transition: opacity .1s; white-space: nowrap; z-index: 5; }
+.tip b { display: block; margin-bottom: 2px; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; font-variant-numeric: tabular-nums; }
+th, td { padding: 6px 8px; border-bottom: 1px solid var(--border); text-align: right; }
+th { font-size: 11px; text-transform: uppercase; letter-spacing: .03em; color: var(--text-secondary); font-weight: 600; }
+th:first-child, td:first-child { text-align: left; }
+.table-scroll { overflow-x: auto; }
+.insights { margin: 0; padding-left: 18px; color: var(--text-secondary); }
+.insights li { margin: 4px 0; }
+.insights b { color: var(--text-primary); }
+footer { margin-top: 20px; font-size: 12px; color: var(--text-muted); }
+</style>
+</head>
+<body>
+<div class="viz-root"><div class="wrap">
+  <header>
+    <h1>Clover &amp; Co. — Irish Retail Sales Dashboard</h1>
+    <p>12 stores across Ireland plus online · January 2024 – December 2025 · Net sales ex. VAT, after discounts and returns</p>
+    <p class="note">Portfolio project by Matthew Shaw. All data is synthetic, generated in Python to mimic real Irish retail patterns.</p>
+  </header>
+
+  <section class="kpis" id="kpis"></section>
+
+  <div class="grid">
+    <div class="card span-12">
+      <h2>Monthly net sales: 2025 vs 2024</h2>
+      <p class="sub">Hover for month detail. Use the filter to view one category.</p>
+      <div class="controls">
+        <label for="cat">Category</label>
+        <select id="cat"><option value="All">All categories</option></select>
+      </div>
+      <div class="legend"><span style="--c:var(--series-1)">2025</span><span style="--c:var(--series-prev)">2024 (prior year)</span></div>
+      <div id="trend"></div>
+    </div>
+
+    <div class="card span-7">
+      <h2>Store league table, 2025</h2>
+      <p class="sub">Net sales; label shows change vs 2024</p>
+      <div id="stores"></div>
+    </div>
+    <div class="card span-5">
+      <h2>Key findings</h2>
+      <p class="sub">What the analysis shows</p>
+      <ul class="insights" id="insights"></ul>
+    </div>
+
+    <div class="card span-6">
+      <h2>Category mix, 2025</h2>
+      <p class="sub">Share of net sales · gross margin and return rate in tooltip</p>
+      <div id="categories"></div>
+    </div>
+    <div class="card span-6">
+      <h2>Sales growth by region</h2>
+      <p class="sub">Net sales change, 2025 vs 2024</p>
+      <div id="regions"></div>
+    </div>
+
+    <div class="card span-7">
+      <h2>When customers shop in-store</h2>
+      <p class="sub">Average orders per day by weekday and hour, 2025 (stronger colour = busier)</p>
+      <div id="heatmap"></div>
+    </div>
+    <div class="card span-5">
+      <h2>Peak trading periods</h2>
+      <p class="sub">Sales per day vs an average day that year</p>
+      <div class="table-scroll" id="peaks"></div>
+    </div>
+
+    <div class="card span-12">
+      <h2>Loyalty customer segments (RFM analysis)</h2>
+      <p class="sub">Customers scored on Recency, Frequency and Monetary value with SQL NTILE(5)</p>
+      <div class="table-scroll" id="rfm"></div>
+    </div>
+  </div>
+
+  <footer>Built with Python (pandas), SQLite and vanilla JavaScript/SVG. Source: github.com/ (add your repo link)</footer>
+</div></div>
+
+<script>
+const DATA = /*__DATA__*/null;
+
+/* ---------- helpers ---------- */
+const eur = v => "€" + Math.round(v).toLocaleString("en-IE");
+const eurK = v => v >= 1e6 ? "€" + (v / 1e6).toFixed(2) + "m" : "€" + Math.round(v / 1000) + "k";
+const pct = (v, d = 1) => (v > 0 ? "+" : "") + Number(v).toFixed(d) + "%";
+const NS = "http://www.w3.org/2000/svg";
+function el(tag, attrs = {}, parent) {
+  const n = document.createElementNS(NS, tag);
+  for (const k in attrs) n.setAttribute(k, attrs[k]);
+  if (parent) parent.appendChild(n);
+  return n;
+}
+function txt(parent, x, y, s, attrs = {}) { const t = el("text", { x, y, ...attrs }, parent); t.textContent = s; return t; }
+function niceMax(v) { const p = Math.pow(10, Math.floor(Math.log10(v))); return Math.ceil(v / p * 2) / 2 * p; }
+function tooltip(card) {
+  const t = document.createElement("div"); t.className = "tip"; card.appendChild(t);
+  return {
+    show(html, evt) {
+      t.innerHTML = html; t.style.opacity = 1;
+      const r = card.getBoundingClientRect();
+      let x = evt.clientX - r.left + 14, y = evt.clientY - r.top + 14;
+      if (x + t.offsetWidth > r.width - 4) x = evt.clientX - r.left - t.offsetWidth - 14;
+      if (y + t.offsetHeight > r.height - 4) y = r.height - t.offsetHeight - 4;
+      t.style.left = Math.max(4, x) + "px"; t.style.top = y + "px";
+    },
+    hide() { t.style.opacity = 0; }
+  };
+}
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+/* ---------- line chart with crosshair ---------- */
+function lineChart(container, labels, series) {
+  container.innerHTML = "";
+  const W = Math.max(320, container.clientWidth), H = 260, m = { t: 10, r: 12, b: 26, l: 56 };
+  const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": "Monthly net sales line chart" }, container);
+  const max = niceMax(Math.max(...series.flatMap(s => s.values)));
+  const x = i => m.l + i * (W - m.l - m.r) / (labels.length - 1);
+  const y = v => H - m.b - v / max * (H - m.t - m.b);
+  for (let k = 0; k <= 4; k++) {
+    const v = max * k / 4;
+    el("line", { x1: m.l, x2: W - m.r, y1: y(v), y2: y(v), stroke: "var(--grid)" }, svg);
+    txt(svg, m.l - 8, y(v) + 4, eurK(v), { "text-anchor": "end" });
+  }
+  const every = W < 560 ? 2 : 1;
+  labels.forEach((l, i) => { if (i % every === 0) txt(svg, x(i), H - 8, l, { "text-anchor": "middle" }); });
+  series.slice().reverse().forEach(s => {
+    el("path", { d: s.values.map((v, i) => (i ? "L" : "M") + x(i) + "," + y(v)).join(""),
+      fill: "none", stroke: s.color, "stroke-width": 2, "stroke-linejoin": "round" }, svg);
+  });
+  const last = series[0].values.length - 1;
+  txt(svg, x(last) - 4, y(series[0].values[last]) - 8, eurK(series[0].values[last]),
+      { "text-anchor": "end", style: "fill:var(--text-primary);font-weight:600" });
+  const cross = el("line", { y1: m.t, y2: H - m.b, stroke: "var(--text-muted)", "stroke-dasharray": "3 3", opacity: 0 }, svg);
+  const dots = series.map(s => el("circle", { r: 4.5, fill: s.color, stroke: "var(--surface-1)", "stroke-width": 2, opacity: 0 }, svg));
+  const tip = tooltip(container.closest(".card"));
+  const hit = el("rect", { x: m.l, y: m.t, width: W - m.l - m.r, height: H - m.t - m.b, fill: "transparent" }, svg);
+  hit.addEventListener("mousemove", e => {
+    const pt = svg.createSVGPoint(); pt.x = e.clientX; pt.y = e.clientY;
+    const p = pt.matrixTransform(svg.getScreenCTM().inverse());
+    const i = Math.max(0, Math.min(labels.length - 1, Math.round((p.x - m.l) / ((W - m.l - m.r) / (labels.length - 1)))));
+    cross.setAttribute("x1", x(i)); cross.setAttribute("x2", x(i)); cross.setAttribute("opacity", 1);
+    dots.forEach((d, k) => { d.setAttribute("cx", x(i)); d.setAttribute("cy", y(series[k].values[i])); d.setAttribute("opacity", 1); });
+    const a = series[0].values[i], b = series[1].values[i];
+    tip.show(`<b>${labels[i]}</b>2025: ${eur(a)}<br>2024: ${eur(b)}<br>Change: <span class="${a >= b ? "up" : "down"}">${pct((a - b) / b * 100)}</span>`, e);
+  });
+  hit.addEventListener("mouseleave", () => { tip.hide(); cross.setAttribute("opacity", 0); dots.forEach(d => d.setAttribute("opacity", 0)); });
+}
+
+/* ---------- horizontal bars ---------- */
+function hbar(container, rows, { fmt = eurK, label = r => "", tipHtml, diverging = false, color = "var(--series-1)" } = {}) {
+  container.innerHTML = "";
+  const W = Math.max(300, container.clientWidth), bh = 18, gap = 9;
+  const labW = Math.min(190, W * 0.38), valW = 92;
+  const H = rows.length * (bh + gap) + 6;
+  const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, role: "img" }, container);
+  const plotW = W - labW - valW;
+  const maxAbs = Math.max(...rows.map(r => Math.abs(r.value)));
+  const zeroX = diverging ? labW + plotW * (Math.max(0, -Math.min(...rows.map(r => r.value))) / (maxAbs * (Math.min(...rows.map(r => r.value)) < 0 ? 2 : 1))) : labW;
+  const scale = diverging ? (plotW - (zeroX - labW)) / maxAbs : plotW / maxAbs;
+  if (diverging) el("line", { x1: zeroX, x2: zeroX, y1: 0, y2: H, stroke: "var(--text-muted)" }, svg);
+  const tip = tooltip(container.closest(".card"));
+  rows.forEach((r, i) => {
+    const yy = i * (bh + gap) + 3;
+    const maxCh = Math.floor((labW - 10) / 6.2);
+    const shown = r.label.length > maxCh ? r.label.slice(0, maxCh - 1) + "…" : r.label;
+    txt(svg, labW - 8, yy + bh / 2 + 4, shown, { "text-anchor": "end", style: "fill:var(--text-primary)" });
+    const w = Math.max(2, Math.abs(r.value) * scale);
+    const x0 = r.value >= 0 ? zeroX : zeroX - w;
+    const c = diverging ? (r.value >= 0 ? "var(--series-1)" : "var(--bad)") : color;
+    el("rect", { x: x0, y: yy, width: w, height: bh, rx: 4, fill: c }, svg);
+    const vx = r.value >= 0 ? x0 + w + 6 : zeroX + 6;
+    txt(svg, vx, yy + bh / 2 + 4, fmt(r.value) + label(r), {});
+    const hit = el("rect", { x: 0, y: yy - gap / 2, width: W, height: bh + gap, fill: "transparent" }, svg);
+    hit.addEventListener("mousemove", e => tip.show(tipHtml ? tipHtml(r) : `<b>${esc(r.label)}</b>${fmt(r.value)}`, e));
+    hit.addEventListener("mouseleave", () => tip.hide());
+  });
+}
+
+/* ---------- heatmap ---------- */
+function heatmap(container, rows) {
+  container.innerHTML = "";
+  const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+  const hours = [...new Set(rows.map(r => +r.hour))].sort((a, b) => a - b);
+  const W = Math.max(320, container.clientWidth), lab = 38, top = 4, bottom = 22;
+  const cw = (W - lab) / hours.length, ch = 26, H = top + days.length * ch + bottom;
+  const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": "Footfall heatmap" }, container);
+  const max = Math.max(...rows.map(r => +r.avg_orders_per_day));
+  const ramp = ["var(--seq-0)", "var(--seq-1)", "var(--seq-2)", "var(--seq-3)", "var(--seq-4)"];
+  const tip = tooltip(container.closest(".card"));
+  days.forEach((d, j) => txt(svg, lab - 6, top + j * ch + ch / 2 + 4, d, { "text-anchor": "end" }));
+  hours.forEach((h, i) => { if (i % 2 === 0) txt(svg, lab + i * cw + cw / 2, H - 6, h + ":00", { "text-anchor": "middle" }); });
+  rows.forEach(r => {
+    const i = hours.indexOf(+r.hour), j = days.indexOf(r.weekday);
+    const v = +r.avg_orders_per_day, k = Math.min(4, Math.floor(v / max * 4.999));
+    const c = el("rect", { x: lab + i * cw + 1, y: top + j * ch + 1, width: cw - 2, height: ch - 2, rx: 3, fill: ramp[k] }, svg);
+    c.addEventListener("mousemove", e => tip.show(`<b>${r.weekday} ${r.hour}:00–${+r.hour + 1}:00</b>${v.toFixed(1)} orders per day (all stores)`, e));
+    c.addEventListener("mouseleave", () => tip.hide());
+  });
+}
+
+/* ---------- table ---------- */
+function table(container, cols, rows) {
+  const t = document.createElement("table");
+  const thead = t.createTHead().insertRow();
+  cols.forEach(c => { const th = document.createElement("th"); th.textContent = c.label; thead.appendChild(th); });
+  const tb = t.createTBody();
+  rows.forEach(r => { const tr = tb.insertRow(); cols.forEach(c => { tr.insertCell().textContent = c.fmt ? c.fmt(r[c.key], r) : r[c.key]; }); });
+  container.innerHTML = ""; container.appendChild(t);
+}
+
+/* ---------- render ---------- */
+function render() {
+  const k = DATA.kpi, cur = k[k.length - 1], prev = k[k.length - 2];
+  const tiles = [
+    ["Net sales 2025", eurK(cur.net_sales), pct(cur.net_sales_yoy_pct) + " vs 2024", cur.net_sales_yoy_pct >= 0],
+    ["Orders", (+cur.orders).toLocaleString("en-IE"), pct(cur.orders_yoy_pct) + " vs 2024", cur.orders_yoy_pct >= 0],
+    ["Avg order value", "€" + (+cur.avg_order_value).toFixed(2), "2024: €" + (+prev.avg_order_value).toFixed(2), null],
+    ["Gross margin", cur.gross_margin_pct + "%", "2024: " + prev.gross_margin_pct + "%", null],
+    ["Return rate", cur.return_rate_pct + "%", "2024: " + prev.return_rate_pct + "%", null],
+  ];
+  const kp = document.getElementById("kpis"); kp.innerHTML = "";
+  tiles.forEach(([l, v, d, good]) => {
+    const div = document.createElement("div"); div.className = "kpi";
+    div.innerHTML = `<div class="label">${l}</div><div class="value">${v}</div><div class="delta ${good === null ? "" : good ? "up" : "down"}">${good === null ? "" : good ? "▲ " : "▼ "}${d}</div>`;
+    kp.appendChild(div);
+  });
+
+  // trend with category filter
+  const cat = document.getElementById("cat").value;
+  const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  const byYear = yr => months.map((_, i) => DATA.monthlyCat
+      .filter(r => +r.year === yr && +r.month === i + 1 && (cat === "All" || r.category === cat))
+      .reduce((s, r) => s + +r.net_sales, 0));
+  lineChart(document.getElementById("trend"), months, [
+    { name: "2025", values: byYear(2025), color: "var(--series-1)" },
+    { name: "2024", values: byYear(2024), color: "var(--series-prev)" },
+  ]);
+
+  hbar(document.getElementById("stores"), DATA.stores.map(s => ({ label: s.store, value: +s.sales_2025, yoy: +s.yoy_pct, s })), {
+    label: r => "  " + pct(r.yoy),
+    tipHtml: r => `<b>${esc(r.label)}</b>2025: ${eur(r.value)}<br>2024: ${eur(r.s.sales_2024)}<br>Change: ${pct(r.yoy)}<br>Share of sales: ${r.s.share_of_sales_pct}%<br>Avg order: €${(+r.s.avg_order_value).toFixed(2)}`,
+  });
+
+  hbar(document.getElementById("categories"), DATA.categories.map(c => ({ label: c.category, value: +c.share_pct, c })), {
+    fmt: v => v.toFixed(1) + "%",
+    tipHtml: r => `<b>${esc(r.label)}</b>Net sales: ${eur(r.c.net_sales)}<br>Gross margin: ${r.c.gross_margin_pct}%<br>Sold on promotion: ${r.c.pct_sold_on_promo}%<br>Return rate: ${r.c.return_rate_pct}%`,
+  });
+
+  hbar(document.getElementById("regions"), DATA.regions.map(r => ({ label: r.region, value: +r.yoy_pct, r })), {
+    fmt: v => pct(v), diverging: true,
+    tipHtml: x => `<b>${esc(x.label)}</b>2025: ${eur(x.r.sales_2025)}<br>2024: ${eur(x.r.sales_2024)}<br>Change: ${pct(x.value)}<br>Stores: ${x.r.stores}`,
+  });
+
+  heatmap(document.getElementById("heatmap"), DATA.heatmap);
+
+  table(document.getElementById("peaks"), [
+    { key: "period", label: "Period" }, { key: "year", label: "Year" },
+    { key: "sales_per_day", label: "Sales / day", fmt: eur },
+    { key: "x_normal_day", label: "vs avg day", fmt: v => (+v).toFixed(2) + "×" },
+  ], DATA.peaks);
+
+  table(document.getElementById("rfm"), [
+    { key: "segment", label: "Segment" },
+    { key: "customers", label: "Customers", fmt: v => (+v).toLocaleString("en-IE") },
+    { key: "pct_customers", label: "% of customers", fmt: v => v + "%" },
+    { key: "pct_sales", label: "% of sales", fmt: v => v + "%" },
+    { key: "avg_orders", label: "Avg orders" },
+    { key: "avg_spend", label: "Avg spend", fmt: v => "€" + (+v).toFixed(0) },
+    { key: "avg_days_since_last_order", label: "Days since last order", fmt: v => Math.round(v) },
+  ], DATA.rfm);
+
+  const ins = document.getElementById("insights"); ins.innerHTML = "";
+  DATA.insights.forEach(s => { const li = document.createElement("li"); li.innerHTML = s; ins.appendChild(li); });
+}
+
+const sel = document.getElementById("cat");
+[...new Set(DATA.monthlyCat.map(r => r.category))].sort().forEach(c => {
+  const o = document.createElement("option"); o.value = o.textContent = c; sel.appendChild(o);
+});
+sel.addEventListener("change", render);
+let rt; window.addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(render, 120); });
+render();
+</script>
+</body>
+</html>

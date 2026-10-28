@@ -1,0 +1,9 @@
+channel,payment_method,orders,share_of_channel_pct
+In-store,Contactless,24987,47.9
+In-store,Chip & PIN,11519,22.1
+In-store,Apple/Google Pay,9447,18.1
+In-store,Cash,6187,11.9
+Online,Card,3711,52.5
+Online,PayPal,1433,20.3
+Online,Apple/Google Pay,1401,19.8
+Online,Klarna,530,7.5

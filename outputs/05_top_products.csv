@@ -1,0 +1,22 @@
+category,rank_in_category,product_name,units,net_sales,gross_profit
+Accessories,1,Leather Wallet,3178,111980.09,65485.95
+Accessories,2,Tweed Cap,3085,84309.88,50961.03
+Accessories,3,Wool Scarf,3052,68855.64,44378.6
+Beauty,1,Perfume 50ml,3304,168233.97,72186.69
+Beauty,2,Skincare Starter Kit,3446,105621.53,56447.11
+Beauty,3,Hand Cream Gift Set,3415,66694.76,40330.96
+Footwear,1,Leather Boots,3692,317627.67,152521.43
+Footwear,2,Running Trainers,3546,234558.34,99774.88
+Footwear,3,School Shoes,3664,129022.92,51272.84
+Homeware,1,Merino Throw,3691,215416.83,129896.36
+Homeware,2,Cotton Bed Set,3698,187034.18,104938.58
+Homeware,3,Christmas Decoration Set,3655,79974.66,53366.26
+Kidswear,1,Kids Raincoat,2936,73669.61,35472.25
+Kidswear,2,School Uniform Set,2885,67775.42,25567.87
+Kidswear,3,Kids Hoodie,2889,49769.61,26513.16
+Menswear,1,Waxed Jacket,3388,367961.0,195681.2
+Menswear,2,Rain Jacket,3284,201947.48,100701.76
+Menswear,3,Aran Jumper,3405,183407.28,106999.08
+Womenswear,1,Wool Blend Coat,4435,446308.86,250947.11
+Womenswear,2,Puffer Jacket,4277,297196.29,157937.17
+Womenswear,3,Midi Dress,4411,203165.34,118518.25

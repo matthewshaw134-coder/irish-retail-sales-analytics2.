@@ -1,0 +1,3 @@
+year,net_sales,gross_profit,gross_margin_pct,orders,avg_order_value,units_sold,return_rate_pct,net_sales_yoy_pct,orders_yoy_pct
+2024,4512130.96,2445479.05,54.2,55293,81.6,115878,4.3,,
+2025,4811372.24,2606795.08,54.2,59127,81.37,123659,4.4,6.6,6.9

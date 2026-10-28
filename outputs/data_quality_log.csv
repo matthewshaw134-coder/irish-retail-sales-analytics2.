@@ -1,0 +1,10 @@
+step,rows_affected
+raw orders loaded,115053
+raw order lines loaded,210516
+payment methods standardised,2301
+duplicate orders removed,458
+county names standardised,540
+order lines with missing quantity dropped,632
+negative quantities corrected,208
+orphan order lines removed,0
+clean order lines in database,209884
